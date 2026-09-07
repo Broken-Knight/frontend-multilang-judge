@@ -6,7 +6,6 @@ dist/
 Thumbs.db
 # Local prototypes and machine-specific files that are not used by the app.
 exercise/
-前端网页样例/
 TempTestingText.cpp
 *.lnk
 pyodide-*.tar.bz2

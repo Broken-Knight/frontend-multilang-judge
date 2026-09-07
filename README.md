@@ -191,54 +191,9 @@ flowchart LR
 - 不支持动态安装第三方 Python 包。
 - 第一次加载 Pyodide 的速度取决于网络和浏览器缓存。
 
-## 4. 项目交付方式
+## 4. C++ 模块接入技术规范
 
-### 4.1 推荐：使用 Git
-
-当前目录还没有初始化为 Git 仓库。首次交付可执行：
-
-```bash
-git init
-git add .
-git commit -m "Initial Python judge MVP"
-```
-
-然后创建 GitHub、GitLab 或 Gitee 仓库，并按平台给出的命令添加远程地址和推送。
-
-接收方使用：
-
-```bash
-git clone <仓库地址>
-cd <项目目录>
-corepack enable
-pnpm install --frozen-lockfile
-pnpm dev
-```
-
-### 4.2 备选：压缩包交付
-
-只打包“建议交付的最小目录”中的内容，不要包含 `node_modules/`、`dist/`、快捷方式和 400MB 的 Pyodide 压缩包。
-
-接收方解压后执行：
-
-```bash
-pnpm install --frozen-lockfile
-pnpm dev
-```
-
-### 4.3 只交付可访问的网站
-
-执行：
-
-```bash
-pnpm build
-```
-
-把 `dist/` 部署到静态服务器。此方式适合普通用户使用，但不适合其他开发者继续开发，因为 `dist/` 是构建产物，不是易维护的源码。
-
-## 5. C++ 模块接入技术规范
-
-### 5.1 接入原则
+### 4.1 接入原则
 
 C++ 端应和 Python 保持相同分层：
 
@@ -253,7 +208,7 @@ C++ 编译和运行必须放在 Web Worker 中，不能在 React 主线程中执
 
 如果继续坚持纯前端，C++ 端需要提供浏览器可用的 WebAssembly 编译链或已经封装好的 WASM C++ 运行环境。若 C++ 端依赖后端 API，则项目将不再是纯前端方案，需要另行定义服务地址、鉴权、并发和安全策略。
 
-### 5.2 建议的公共 Runner 接口
+### 4.2 建议的公共 Runner 接口
 
 新增 `src/services/languageRunner.ts`：
 
@@ -281,7 +236,7 @@ export interface LanguageRunner {
 
 建议把当前 `pythonRunner.ts` 中的 `judge()` 和 `normalizeOutput()` 提取为公共评测函数，避免 Python 和 C++ 各写一套输出比较逻辑。
 
-### 5.3 C++ 开发者应交付的文件
+### 4.3 C++ 开发者应交付的文件
 
 建议 C++ 模块至少包含：
 
@@ -306,7 +261,7 @@ C++ 开发者还应说明：
 - 浏览器兼容范围
 - 已知不支持的系统调用、文件系统和库
 
-### 5.4 Worker 消息协议
+### 4.4 Worker 消息协议
 
 建议 Python 和 C++ 使用统一消息形状：
 
@@ -334,7 +289,7 @@ interface WorkerResponse {
 
 C++ 编译较重，`CppRunnerClient` 可以按源代码哈希缓存编译产物。对外接口仍接收 `source`，缓存逻辑留在 C++ 模块内部，不让页面承担编译器细节。
 
-### 5.5 类型调整
+### 4.5 类型调整
 
 接入 C++ 时建议修改 `src/types.ts`：
 
@@ -366,7 +321,7 @@ multilang-judge-code:<language>:<problemId>
 multilang-judge-input:<language>:<problemId>
 ```
 
-### 5.6 页面接入步骤
+### 4.6 页面接入步骤
 
 1. 实现 `LanguageRunner` 公共接口。
 2. 让 `PythonRunnerClient` 实现该接口。
@@ -389,7 +344,7 @@ function createRunner(language: LanguageId): LanguageRunner {
 }
 ```
 
-### 5.7 C++ 验收清单
+### 4.7 C++ 验收清单
 
 - 正确代码能够编译并运行。
 - 语法错误包含错误信息，尽量提供行号和列号。
@@ -412,7 +367,7 @@ Cross-Origin-Embedder-Policy: require-corp
 
 这会影响 CDN 资源的加载策略，应由 C++ 开发者在接入前明确说明，不能等部署阶段再处理。
 
-## 6. 联调时双方的职责边界
+## 5. 联调时双方的职责边界
 
 前端主项目维护者负责：
 
