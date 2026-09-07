@@ -1,8 +1,9 @@
 # Frontend Multilanguage Judge
 
-这是一个基于 Vite、React、TypeScript、Monaco Editor 和 Pyodide 的纯前端评测平台。
-
-当前版本已经完成 Python 的编译检查、运行、超时终止和本地测试点评测。C++ 入口目前仅保留在界面和类型层，尚未接入编译运行时。
+这是一个基于 Vite、React、TypeScript、Monaco Editor 和 Pyodide 的纯前端编程平台。
+项目内容是：实现一个支持 Python 和 C++ 语言的基于WebAssembly的纯前端多语言编程平台。本人负责Python部分，搭档负责C++部分。
+当前版本已经完成 Python 的编译检查、运行、超时终止和本地测试点评测。
+由于组内沟通配合等问题，尚未完成网页平台合并，C++ 入口目前仅保留在界面和类型层，尚未接入编译运行时。
 
 ## 1. 项目文件清单
 

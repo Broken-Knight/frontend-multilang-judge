@@ -11,3 +11,6 @@ TempTestingText.cpp
 *.lnk
 pyodide-*.tar.bz2
 *Zone.Identifier
+.vite/
+项目构思与问题记录.md
+项目要求与报告/
